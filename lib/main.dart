@@ -41,7 +41,6 @@ class _RandomWordsState extends State<RandomWords> {
   final _saved = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18.0);
   @override
-  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +58,7 @@ class _RandomWordsState extends State<RandomWords> {
       body: _buildSuggestions(),
     );
   }
-  
+
 // #enddocregion RWS-build
 
   void _pushSaved() {
@@ -76,7 +75,7 @@ class _RandomWordsState extends State<RandomWords> {
               );
             },
           );
-          
+
           final divided = tiles.isNotEmpty
               ? ListTile.divideTiles(
                   context: context,
@@ -94,7 +93,23 @@ class _RandomWordsState extends State<RandomWords> {
       ),
     );
   }
-  
+
+  Widget _buildSuggestions() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (context, i) {
+        if (i.isOdd) {
+          return const Divider();
+        }
+        final index = i ~/ 2;
+
+        if (index >= _suggestions.length) {
+          _suggestions.addAll(generateWordPairs().take(10));
+        }
+        return _buildRow(_suggestions[index]);
+      },
+    );
+  }
 
   Widget _buildRow(WordPair pair) {
     final alreadySaved = _saved.contains(pair);
@@ -118,24 +133,6 @@ class _RandomWordsState extends State<RandomWords> {
           }
         });
       }, // ... to here.
-    );
-  }
-  
-
-  Widget _buildSuggestions() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemBuilder: (context, i) {
-        if (i.isOdd) {
-          return const Divider();
-        }
-        final index = i ~/ 2;
-
-        if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10));
-        }
-        return _buildRow(_suggestions[index]);
-      },
     );
   }
 }
